@@ -13,6 +13,11 @@ public class PlayerCtrl : MonoBehaviour {
 	// Use this for initialization
 	void Start() {
 		tr = GetComponent<Transform>();
+
+		_animation = GetComponentInChildren<Animation>();
+
+		_animation.clip = anim.idle;
+		_animation.Play();
 	}
 	
 	// Update is called once per frame
@@ -28,5 +33,31 @@ public class PlayerCtrl : MonoBehaviour {
 		tr.Translate(moveDir * Time.deltaTime * moveSpeed, Space.Self);
 
 		tr.Rotate(Vector3.up * Time.deltaTime * rotSpeed * Input.GetAxis("Mouse X"));
+
+		if (v >= 0.1f) {
+			_animation.CrossFade(anim.runForward.name, 0.3f);
+		} else if (v <= -0.1f) {
+			_animation.CrossFade(anim.runBackward.name, 0.3f);
+		} else if (h >= 0.1f) {
+			_animation.CrossFade(anim.runRight.name, 0.3f);
+		} else if (h <= -0.1f) {
+			_animation.CrossFade(anim.runLeft.name, 0.3f);
+		} else {
+			_animation.CrossFade(anim.idle.name, 0.3f);
+		}
 	}
+
+	[System.Serializable]
+	public class Anim {
+		public AnimationClip idle;
+		public AnimationClip runForward;
+		public AnimationClip runBackward;
+		public AnimationClip runRight;
+		public AnimationClip runLeft;
+	}
+
+	public Anim anim;
+	public Animation _animation;
+
+
 }
